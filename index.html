@@ -1,0 +1,606 @@
+<!--
+meta:
+  title: "Skjenketoppen i Fredrikstad 2025"
+  newspaper: "Fredriksstad Blad"
+  author_full_name: "Mathias Bakke Eidissen"
+  created_date: "2025-05-22"
+  expires_date: "2025-06-21"
+  source: "Fredrikstad Kommune / Omsetningstall 2025"
+  risks: "Størrelsen på glassene er 100% lineært skalert. Tallene er korrigert for Saints, Tæps, Alibi og Barkaden."
+  responsibility: "Ansvarlig redaktør/avisa er ansvarlig for publisert redaksjonell kode."
+-->
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #BE0064;
+            --accent: #004E46;
+            --white: #FFFFFF;
+            --beer-color: #FFB300;
+            --wine-color: #920000;
+            --spirit-color: #D4AF37;
+            --text-dark: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.96);
+            --shadow: 0 15px 45px rgba(0,0,0,0.4);
+            --font-main: "Instrument Sans", system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: url('https://g.api.no/obscura/API/dynamic/r1/ece5/tr_4746_4746_s_f/1/fred%2F2026%2F1%2F29%2F18%2F5_59_3022358%2BBrygga%2B%25281%2Bof%2B2%2529.jpg?chk=4A6452') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-dark);
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 32px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        /* Navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 110px;
+            background: rgba(255,255,255,0.8);
+            border: 2px solid transparent;
+            padding: 14px;
+            border-radius: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn.active {
+            background: var(--white);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(190, 0, 100, 0.2);
+        }
+
+        /* Podium / Pall */
+        .podium-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 12px;
+            min-height: 520px;
+            margin-bottom: 10px;
+        }
+
+        .podium-spot {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .rank-1 { order: 2; z-index: 5; }
+        .rank-2 { order: 1; }
+        .rank-3 { order: 3; }
+
+        .visual-area {
+            height: 250px;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .emoji-scaler {
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: bottom center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .floating-emoji {
+            font-size: 5rem;
+            margin-bottom: -10px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .glass-body {
+            width: 70px;
+            height: 120px;
+            border: 4px solid #1a1a1a;
+            border-top: none;
+            border-radius: 0 0 18px 18px;
+            background: rgba(255,255,255,0.6);
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .liquid { width: 100%; height: 92%; transition: background 0.5s; }
+        .cat-g1 .liquid { background: var(--beer-color); }
+        .cat-g2 .liquid { background: var(--wine-color); }
+        .cat-g3 .liquid { background: var(--spirit-color); }
+
+        .podium-step {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 8px 30px;
+            border-radius: 16px 16px 0 0;
+            box-shadow: inset 0 2px 20px rgba(255,255,255,0.1);
+            transition: min-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .rank-1 .podium-step { 
+            min-height: 260px; 
+            background: #000; 
+            border-top: 8px solid var(--primary); 
+            box-shadow: 0 -10px 40px rgba(190, 0, 100, 0.4);
+        }
+        .rank-2 .podium-step { 
+            min-height: 180px; 
+            background: #1a1a1a; 
+            border-top: 6px solid var(--accent); 
+        }
+        .rank-3 .podium-step { 
+            min-height: 130px; 
+            background: #2a2a2a; 
+            border-top: 6px solid #555; 
+        }
+
+        /* Placement Numbers on Podium */
+        .step-number {
+            font-size: 3rem;
+            font-weight: 1000;
+            line-height: 1;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .rank-1 .step-number { color: #ffeb3b; opacity: 1; }
+        .rank-2 .step-number { color: #ffffff; opacity: 1; }
+        .rank-3 .step-number { color: #bbbbbb; opacity: 1; }
+
+        .venue-name {
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            text-align: center;
+            color: #fff;
+            width: 100%;
+        }
+
+        .rank-1 .venue-name { font-size: 1.6rem; }
+        .rank-2 .venue-name { font-size: 1.2rem; }
+        .rank-3 .venue-name { font-size: 1.1rem; }
+
+        .venue-liters {
+            font-weight: 1000;
+            line-height: 1;
+            color: #fff;
+        }
+
+        .rank-1 .venue-liters { font-size: 1.7rem; color: #ffeb3b; }
+        .rank-2 .venue-liters { font-size: 1.4rem; color: #fff; }
+        .rank-3 .venue-liters { font-size: 1.3rem; color: #eee; }
+
+        .liter-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            margin-top: 4px;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 1px;
+        }
+
+        /* Search and Results */
+        input[type="text"] {
+            width: 100%;
+            padding: 20px 25px;
+            border: 3px solid transparent;
+            border-radius: 22px;
+            font-size: 1.2rem;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus { border-color: var(--primary); }
+
+        .result-row {
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .res-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .res-title { font-weight: 950; font-size: 1.2rem; color: var(--text-dark); }
+        .res-addr { font-size: 0.8rem; opacity: 0.7; font-weight: 700; margin-top: 2px; }
+
+        .res-all-data {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+        }
+
+        .res-data-item {
+            text-align: center;
+            background: #f9f9f9;
+            padding: 8px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .res-icon { font-size: 1.2rem; margin-bottom: 2px; }
+        .res-val { font-weight: 1000; font-size: 1rem; color: var(--primary); }
+        .res-lbl { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; opacity: 0.6; }
+
+        /* Footer and source */
+        .footer-card {
+            background: rgba(0, 0, 0, 0.92);
+            color: #fff;
+            padding: 20px 30px;
+            border-radius: 24px;
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-card p {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+
+        .footer-card span {
+            color: var(--primary);
+            font-weight: 900;
+        }
+
+        @media (max-width: 650px) {
+            .podium-container { flex-direction: column; align-items: center; gap: 35px; min-height: auto; padding-top: 40px; }
+            .podium-spot { width: 100%; order: unset !important; }
+            .podium-step { min-height: auto !important; border-radius: 20px; padding: 30px 20px; }
+            .rank-1 .venue-name { font-size: 1.5rem; }
+            h1 { font-size: 1.8rem; }
+            .visual-area { height: 180px; }
+            .res-all-data { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="glass-card">
+        <header>
+            <h1>Skjenketoppen 2025</h1>
+            <p class="subtitle">Fredrikstad: Hvem solgte flest liter?</p>
+        </header>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="updateView('g1', this)">🍺 Øl & Sider</button>
+            <button class="tab-btn" onclick="updateView('g2', this)">🍷 Vin</button>
+            <button class="tab-btn" onclick="updateView('g3', this)">🥃 Brennevin</button>
+        </nav>
+
+        <div class="podium-container" id="podium">
+            <!-- JS fyller pallen -->
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <input type="text" id="search" placeholder="Søk på ditt skjenkested..." oninput="search()">
+        <div id="results"></div>
+    </div>
+
+    <div class="footer-card">
+        <p>Kilde: <span>Fredrikstad kommune</span> (omsetningstall 2025)</p>
+        <p>Grafikk: <span>Mathias Bakke Eidissen</span>, Fredriksstad Blad</p>
+    </div>
+</div>
+
+<script>
+    const venues = [
+        {navn: "Bergmann's", g1: 53591, g2: 7353, g3: 2675, adresse: "Storgata 13"},
+        {navn: "Lille Dragen", g1: 45787, g2: 2525, g3: 860, adresse: "Brogata 17"},
+        {navn: "Idyllfestivalen", g1: 39198, g2: 4180, g3: 109, adresse: "Stortorvet 5/7"},
+        {navn: "Tæps", g1: 38992, g2: 11452, g3: 586, adresse: "Nygaardsgata 33"}, // KORRIGERT: g3 fra 2586 til 586
+        {navn: "Restaurant Tamburen", g1: 37584, g2: 2476, g3: 646, adresse: "Færgeportgaten 78 B"},
+        {navn: "Heim Fredrikstad", g1: 28471, g2: 2865, g3: 1478, adresse: "Storgata 15"},
+        {navn: "Havnelageret", g1: 27000, g2: 7000, g3: 700, adresse: "Storgata 17"},
+        {navn: "Barkaden", g1: 26085, g2: 2776, g3: 1566, adresse: "Storgata 4"}, // Bekreftet: g3 1566
+        {navn: "Hotel Fredrikstad", g1: 25000, g2: 2000, g3: 500, adresse: "Nygaardsgata 9"},
+        {navn: "Waterfront Bar & Bistro", g1: 24814, g2: 3600, g3: 515, adresse: "Storgata 17"},
+        {navn: "Båthuset scene", g1: 24250, g2: 3480, g3: 780, adresse: "Verkstedveien 12"},
+        {navn: "Los Tacos Fredrikstad", g1: 20976, g2: 15, g3: 40, adresse: "Storgata 13"},
+        {navn: "Kong Fredrik", g1: 20000, g2: 7000, g3: 800, adresse: "Ferjestedsveien 18"},
+        {navn: "Pepos", g1: 19944, g2: 183, g3: 24, adresse: "Torvgaten 57"},
+        {navn: "Odins Kro", g1: 19451, g2: 1073, g3: 474, adresse: "Storveien 83"},
+        {navn: "Saints Bar", g1: 19152, g2: 275, g3: 173, adresse: "Stadion 1"}, // KORRIGERT: g3 fra 6173 til 173
+        {navn: "Værste Hangarn", g1: 14070, g2: 65, g3: 6, adresse: "Dokka 2"},
+        {navn: "Naboens Pub", g1: 14020, g2: 1187, g3: 227, adresse: "Apotekerveien 20"},
+        {navn: "Månefestivalen", g1: 11563, g2: 1232, g3: 0, adresse: "Kirkegaten 24"},
+        {navn: "Quality Hotel Fredrikstad", g1: 10798, g2: 3304, g3: 333, adresse: "Nygata 2-6"},
+        {navn: "Paa Brygga", g1: 10530, g2: 2804, g3: 341, adresse: "Dampskipsbrygga 12A"},
+        {navn: "Guilty Pleasure Bar", g1: 10466, g2: 3247, g3: 198, adresse: "Jens Wilhelmsens gate 7"},
+        {navn: "Café Magenta", g1: 9746, g2: 2168, g3: 102, adresse: "Toldbodgaten 105"},
+        {navn: "Alibi", g1: 9477, g2: 1144, g3: 1641, adresse: "Storgata 15"}, // Bekreftet: g3 1641
+        {navn: "Brasserie Sjø & Land", g1: 9276, g2: 5110, g3: 510, adresse: "Storgata 5"},
+        {navn: "Solveigs Pizza", g1: 9239, g2: 1041, g3: 24, adresse: "Kråkerøyveien 2"},
+        {navn: "Vinbaren Hoi Polloi", g1: 8800, g2: 3900, g3: 211, adresse: "Nygaardsplassen 4"},
+        {navn: "KØL", g1: 8700, g2: 3800, g3: 335, adresse: "Nygaardsplassen 7"},
+        {navn: "Majorens Kro & Stue", g1: 7929, g2: 1808, g3: 246, adresse: "Voldportgaten 73"},
+        {navn: "Savoy Terrasse", g1: 7923, g2: 1390, g3: 1523, adresse: "Storgata 11"},
+        {navn: "Nini Beach", g1: 7517, g2: 1261, g3: 1350, adresse: "Storgata 13"},
+        {navn: "Egon Fredrikstad", g1: 7298, g2: 2647, g3: 109, adresse: "Nygaardsgata 50"},
+        {navn: "Pizzanini", g1: 7158, g2: 668, g3: 58, adresse: "Nygaardsgaten 23a"},
+        {navn: "Fjeldberg Marina", g1: 6578, g2: 601, g3: 186, adresse: "Freskoveien 16"},
+        {navn: "Restaurant Elin", g1: 6184, g2: 1535, g3: 276, adresse: "Golfsvingen 1"},
+        {navn: "Galleriet Vinbar", g1: 6003, g2: 2500, g3: 0, adresse: "Torvgaten 61"},
+        {navn: "Restaurant Lille Italia", g1: 6000, g2: 600, g3: 50, adresse: "Dampskipsbrygga 1"},
+        {navn: "Månen kulturhus", g1: 5558, g2: 464, g3: 5, adresse: "Kirkegaten 24"},
+        {navn: "Elias Grill & Pizzabar", g1: 5523, g2: 38, g3: 31, adresse: "Hans Nilsen Haugesvei 2"},
+        {navn: "Restauranthuset Slippen", g1: 5507, g2: 9355, g3: 287, adresse: "Verkstedveien 12"},
+        {navn: "City Bar & Spiseri", g1: 4990, g2: 1115, g3: 285, adresse: "Nygaardsgata 44-46"},
+        {navn: "Knossos", g1: 4849, g2: 2511, g3: 224, adresse: "Storgaten 33-35"},
+        {navn: "Pizzeria Fabbrica", g1: 4820, g2: 1762, g3: 79, adresse: "Storgata 33"},
+        {navn: "Pincho Nation", g1: 4317, g2: 3136, g3: 387, adresse: "Nygata 4"},
+        {navn: "Colletts", g1: 4272, g2: 2890, g3: 89, adresse: "Storgata 11"},
+        {navn: "Restaurant De Roma", g1: 4253, g2: 1360, g3: 113, adresse: "Storgata 21"},
+        {navn: "Engelsviken Brygge", g1: 4221, g2: 2175, g3: 81, adresse: "Engelsvikveien 6"},
+        {navn: "Litteraturhuset", g1: 4200, g2: 895, g3: 72, adresse: "Storgata 11"},
+        {navn: "Glommafestivalen", g1: 4154, g2: 18, g3: 4, adresse: "C/O Lasse Kjønigsen"},
+        {navn: "Hankø Fjordhotel & Spa", g1: 3981, g2: 2021, g3: 177, adresse: "Hankø"},
+        {navn: "Hankøsund Restaurant", g1: 3870, g2: 1167, g3: 62, adresse: "Vikaneveien 409"},
+        {navn: "City Scene", g1: 3807, g2: 93, g3: 199, adresse: "Nygaardsgata 44-46"},
+        {navn: "Lucky Bowl", g1: 3732, g2: 149, g3: 7, adresse: "Kråkerøyveien 2A"},
+        {navn: "Thai Market/Nomads", g1: 3256, g2: 2446, g3: 126, adresse: "Dampskipsbrygga 12-14"},
+        {navn: "Tasty Toast", g1: 3221, g2: 462, g3: 96, adresse: "Bevøveien 311"},
+        {navn: "Hankø Seilerkro", g1: 3106, g2: 840, g3: 79, adresse: "Vikaneveien 405"},
+        {navn: "Majorens Golf", g1: 2972, g2: 32, g3: 82, adresse: "Torsnesveien 16"},
+        {navn: "Værk", g1: 2892, g2: 1313, g3: 135, adresse: "Færgeportgaten 78B"},
+        {navn: "ZZ Pizza", g1: 2879, g2: 77, g3: 69, adresse: "Nygaardsplassen 4"},
+        {navn: "Blå Grotte", g1: 2616, g2: 82, g3: 8, adresse: "Nygaardsgata 22-24"},
+        {navn: "Stadion Event", g1: 2600, g2: 650, g3: 30, adresse: "Stadion 31"},
+        {navn: "Cantina Tacos", g1: 2600, g2: 500, g3: 225, adresse: "Nygaardsgata 37"},
+        {navn: "Cactus", g1: 2587, g2: 19, g3: 81, adresse: "Nygaardsgata 21"},
+        {navn: "Restaurant Fauna", g1: 2449, g2: 619, g3: 40, adresse: "Storgata 35"},
+        {navn: "Phønix Selskapslokaler", g1: 2400, g2: 1000, g3: 120, adresse: "Ferjestedsveien 17"},
+        {navn: "Mother India", g1: 2344, g2: 56, g3: 67, adresse: "Storgata 20"},
+        {navn: "Scandic City Hotel", g1: 2299, g2: 215, g3: 40, adresse: "Nygaardsgata 44-46"},
+        {navn: "Divan Restaurant", g1: 2119, g2: 944, g3: 53, adresse: "Storgata 3"},
+        {navn: "Asia City", g1: 2000, g2: 1000, g3: 50, adresse: "Stortorvet 5-7"},
+        {navn: "Mormors Café", g1: 2000, g2: 500, g3: 10, adresse: "Rådhusgata 18 A"},
+        {navn: "Compass 4175", g1: 1906, g2: 13, g3: 411, adresse: "Stadion 31"},
+        {navn: "Stjernen Hockey", g1: 1626, g2: 9, g3: 3, adresse: "Utfarten 16"},
+        {navn: "St. Harry", g1: 1608, g2: 26, g3: 585, adresse: "Storgata 26"},
+        {navn: "Chang Cheng", g1: 1534, g2: 290, g3: 15, adresse: "Storgata 14"},
+        {navn: "Kystkroa Bar", g1: 1434, g2: 1079, g3: 146, adresse: "Skjæløyveien 65"},
+        {navn: "Café Fru B", g1: 1332, g2: 62, g3: 815, adresse: "Gamle Beddingvei 28"},
+        {navn: "Fredrikstad Bryggeri", g1: 1244, g2: 14, g3: 493, adresse: "Losjeveien 2"},
+        {navn: "Magasinet", g1: 1062, g2: 27, g3: 835, adresse: "Mindre-Alvs vei 9"},
+        {navn: "St.Croix-huset", g1: 854, g2: 5, g3: 7, adresse: "St. Croix gt.16"},
+        {navn: "Flora Restaurant", g1: 720, g2: 2, g3: 2, adresse: "Nygaardsgata 4"},
+        {navn: "Far East House", g1: 718, g2: 56, g3: 33, adresse: "Lislebyveien 191 A"},
+        {navn: "Siam Café", g1: 700, g2: 60, g3: 0, adresse: "Dampskipsbrygga 6"},
+        {navn: "St. Raw", g1: 475, g2: 2985, g3: 46, adresse: "Storgata 11"},
+        {navn: "Masala Indian", g1: 419, g2: 74, g3: 12, adresse: "Agentgaten 5"},
+        {navn: "Gamlebyen Hotell", g1: 408, g2: 87, g3: 2, adresse: "Voldportgaten 72"},
+        {navn: "Louis Selskapslokaler", g1: 384, g2: 122, g3: 12, adresse: "Kasernegaten 46"},
+        {navn: "Lokalet F13", g1: 346, g2: 13, g3: 0, adresse: "Farmanns gate 13B"},
+        {navn: "Handelsstanden", g1: 209, g2: 4, g3: 15, adresse: "Nygaardsgata 5"},
+        {navn: "Cube8 Gallery", g1: 201, g2: 3, g3: 6, adresse: "Toldbodbrygga 1"},
+        {navn: "Bakfickan Kafé", g1: 185, g2: 1, g3: 2, adresse: "Olaf M.Holwechs gate 4"},
+        {navn: "Cicignon Café", g1: 165, g2: 1, g3: 8, adresse: "Ridehusgata 14"},
+        {navn: "Hankø Yacht Club", g1: 157, g2: 4631, g3: 116, adresse: "Hotellveien 2"},
+        {navn: "Foten kiosk", g1: 120, g2: 2, g3: 40, adresse: "Fotenveien 90"},
+        {navn: "Femtisju", g1: 93, g2: 9, g3: 1, adresse: "Torvgaten 57A"},
+        {navn: "Sabrura", g1: 89, g2: 4, g3: 5, adresse: "Jens Wilhelmsens gate 7"},
+        {navn: "Choco Loco", g1: 60, g2: 2, g3: 0, adresse: "Nygaardsgata 45"},
+        {navn: "Su Sushi Bar", g1: 60, g2: 15, g3: 7, adresse: "Nygaardsgata 35"},
+        {navn: "M/S Hvaler", g1: 60, g2: 9, g3: 0, adresse: "Mindre-Alvs vei 3"},
+        {navn: "Kjøkkentjenesten", g1: 36, g2: 3, g3: 7, adresse: "Tomteveien 49"},
+        {navn: "Studentsamskipnaden", g1: 3, g2: 1, g3: 0, adresse: "Kobberslagerstredet 5"},
+        {navn: "Vik Selskapslokaler", g1: 2, g2: 43, g3: 5, adresse: "Haldenveien 174"},
+        {navn: "Christensen bakeri", g1: 23, g2: 3, g3: 8, adresse: "Storveien 81A"},
+        {navn: "City Burger", g1: 6, g2: 27, g3: 94, adresse: "Stortorvet 9"}
+    ];
+
+    let current = 'g1';
+    const emojis = { g1: '🍺', g2: '🍷', g3: '🥃' };
+    const fmt = n => n.toLocaleString('no-NO');
+
+    function updateView(cat, btn) {
+        current = cat;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+        search();
+    }
+
+    function render() {
+        const area = document.getElementById('podium');
+        const sorted = [...venues].sort((a,b) => b[current] - a[current]).slice(0,3);
+        const max = sorted[0][current];
+
+        area.innerHTML = '';
+        sorted.forEach((item, i) => {
+            const scale = item[current] / max;
+            const rank = i + 1;
+            
+            const div = document.createElement('div');
+            div.className = `podium-spot rank-${rank} cat-${current}`;
+            div.innerHTML = `
+                <div class="visual-area">
+                    <div class="emoji-scaler" style="transform: scale(${scale});">
+                        <span class="floating-emoji">${emojis[current]}</span>
+                        <div class="glass-body">
+                            <div class="liquid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="podium-step">
+                    <span class="step-number">${rank}</span>
+                    <div class="venue-name">${item.navn}</div>
+                    <div class="venue-liters">${fmt(item[current])}</div>
+                    <span class="liter-label">liter solgt</span>
+                </div>
+            `;
+            area.appendChild(div);
+        });
+    }
+
+    function search() {
+        const term = document.getElementById('search').value.toLowerCase();
+        const area = document.getElementById('results');
+        area.innerHTML = '';
+        if (term.length < 2) return;
+
+        const res = venues.filter(v => v.navn.toLowerCase().includes(term));
+        if (!res.length) {
+            area.innerHTML = '<div class="result-row" style="justify-content:center; font-weight:900;">INGEN TREFF I REGISTERET</div>';
+            return;
+        }
+
+        res.forEach(v => {
+            const div = document.createElement('div');
+            div.className = 'result-row';
+            div.innerHTML = `
+                <div class="res-header">
+                    <div>
+                        <div class="res-title">${v.navn}</div>
+                        <div class="res-addr">${v.adresse}</div>
+                    </div>
+                </div>
+                <div class="res-all-data">
+                    <div class="res-data-item">
+                        <span class="res-icon">🍺</span>
+                        <span class="res-val">${fmt(v.g1)}</span>
+                        <span class="res-lbl">Øl/Sider</span>
+                    </div>
+                    <div class="res-data-item">
+                        <span class="res-icon">🍷</span>
+                        <span class="res-val">${fmt(v.g2)}</span>
+                        <span class="res-lbl">Vin</span>
+                    </div>
+                    <div class="res-data-item">
+                        <span class="res-icon">🥃</span>
+                        <span class="res-val">${fmt(v.g3)}</span>
+                        <span class="res-lbl">Brennevin</span>
+                    </div>
+                </div>
+            `;
+            area.appendChild(div);
+        });
+    }
+
+    window.onload = render;
+
+    // Auto-resize for smartembed
+    (function () {
+        if (window.self === window.top) return;
+        const sendH = () => {
+            const height = Math.ceil(document.documentElement.scrollHeight);
+            window.parent.postMessage({ type: "resize", height: height }, "*");
+        };
+        window.addEventListener("load", sendH);
+        window.addEventListener("resize", sendH);
+        if ("ResizeObserver" in window) new ResizeObserver(sendH).observe(document.body);
+    })();
+</script>
+</body>
+</html>
